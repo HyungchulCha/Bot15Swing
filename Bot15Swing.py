@@ -1,6 +1,7 @@
 from BotConfig import *
 from BotUtil import *
 from BotKIKr import BotKIKr
+from dateutil.relativedelta import *
 import pandas as pd
 import datetime
 import threading
@@ -469,6 +470,12 @@ if __name__ == '__main__':
                     B15.market_to_excel()
                     B15.bool_stockorder_timer = False
                     B15.bool_stockorder = False
+
+                today = datetime.datetime.today()
+                next_month = datetime.datetime(today.year, today.month, 1) + relativedelta(months=1)
+                month_last = next_month + relativedelta(seconds=-1)
+                if today.strftime('%Y%m%d') == month_last.strftime('%Y%m%d'):
+                    B15.deadline_to_excel()
 
                 B15.bool_marketday = False
                 B15.bool_marketday_end = True

@@ -413,9 +413,7 @@ class Bot15Swing():
                             'q': q,
                             'p': float(p),
                             'a': float(a),
-                            'max': float(p),
                             'pft': float(p)/float(a),
-                            'sel': 1,
                             'ptp': float(a) * int(q),
                             'ctp': float(p) * int(q)
                         }

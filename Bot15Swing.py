@@ -450,7 +450,7 @@ class Bot15Swing():
 if __name__ == '__main__':
 
     B15 = Bot15Swing()
-    # B15.market_to_excel(False, True)
+    B15.market_to_excel(True, True)
 
     while True:
 
@@ -461,7 +461,7 @@ if __name__ == '__main__':
             t_091500 = t_n.replace(hour=9, minute=15, second=0)
             t_152500 = t_n.replace(hour=15, minute=25, second=0)
             t_153000 = t_n.replace(hour=15, minute=30, second=0)
-            t_200000 = t_n.replace(hour=20, minute=0, second=0)
+            t_160000 = t_n.replace(hour=16, minute=0, second=0)
 
             if t_n >= t_085000 and t_n <= t_153000 and B15.bool_marketday == False:
                 if os.path.isfile(os.getcwd() + '/token.dat'):
@@ -481,7 +481,7 @@ if __name__ == '__main__':
                     B15.stock_order()
                     B15.bool_stockorder = True
 
-            if t_n == t_200000 and B15.bool_marketday_end == False:
+            if t_n == t_160000 and B15.bool_marketday_end == False:
 
                 if B15.init_marketday == 'Y':
                     B15.market_to_excel(True, True)

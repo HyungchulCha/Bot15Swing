@@ -524,7 +524,6 @@ class Bot15Swing():
 if __name__ == '__main__':
 
     B15 = Bot15Swing()
-    # 한달에 한번
     # B15.deadline_to_excel()
     # B15.market_to_excel()
 

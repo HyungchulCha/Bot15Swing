@@ -450,7 +450,7 @@ class Bot15Swing():
 if __name__ == '__main__':
 
     B15 = Bot15Swing()
-    B15.market_to_excel(False, True)
+    # B15.market_to_excel(False, True)
 
     while True:
 

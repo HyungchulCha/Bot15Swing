@@ -18,6 +18,7 @@ LINE_URL = 'https://notify-api.line.me/api/notify'
 LINE_TOKEN = '48zl8RmuB0lZoPOoVmqowZzjsUE0P53JO7jfVFCyLwh'
 
 FILE_URL = DIRECTORY + '/Data'
+FILE_URL_15 = DIRECTORY + '/Data15'
 FILE_URL_DATA_15M = FILE_URL + '/BotData_15m.xlsx'
 FILE_URL_BLNC_15M = FILE_URL + '/BalanceList_15m.pickle'
 FILE_URL_SMBL_15M = FILE_URL + '/SymbolList_15m.pickle'

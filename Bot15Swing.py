@@ -2,7 +2,10 @@ from BotConfig import *
 from BotUtil import *
 from BotKIKr import BotKIKr
 from dateutil.relativedelta import *
+from pykiwoom.kiwoom import *
+import time
 import pandas as pd
+import numpy as np
 import datetime
 import threading
 import os
@@ -13,7 +16,7 @@ class Bot15Swing():
     
     def __init__(self):
 
-        self.mock = False
+        self.mock = True
         self.key = KI_APPKEY_IMITATION if self.mock else KI_APPKEY_PRACTICE
         self.secret = KI_APPSECRET_IMITATION if self.mock else KI_APPSECRET_PRACTICE
         self.account = KI_ACCOUNT_IMITATION if self.mock else KI_ACCOUNT_PRACTICE
@@ -434,6 +437,55 @@ class Bot15Swing():
             if tn_pos_c and _tn_div == 14:
                 self.bool_threshold = True
 
+
+    def _market_to_excel(self):
+
+        fltr_list = self.bkk.filter_code_list()
+        if len(fltr_list) > 0:
+            save_file(FILE_URL_SMBL_15M, fltr_list)
+
+        code_list = list(set(self.get_guant_code_list() + self.get_balance_code_list()))
+
+        kiwoom = Kiwoom()
+        kiwoom.CommConnect()
+
+        delete_file(FILE_URL_15)
+
+        for i, code in enumerate(code_list):
+            print(f"{i + 1}/{len(code_list)} {code}")
+            df = kiwoom.block_request("opt10080", 종목코드=code, 틱범위=15, 수정주가구분=1, output="주식분봉차트조회", next=0)
+            df.drop(df[(df['체결시간'].str.contains('153300'))].index, inplace=True)
+            df.to_excel(FILE_URL_15 + '/' + code + '.xlsx')
+            time.sleep(0.25)
+
+        flist = os.listdir(FILE_URL_15)
+        xlsx_list = np.array([x for x in flist if x.endswith('.xlsx')])[:3]
+        
+        empy_df = []
+        for x in np.nditer(xlsx_list):
+            code = str(x).split('.')[0]
+            code_df = pd.read_excel(FILE_URL_15 + '/' + str(x))
+            code_df = code_df[::-1]
+            code_df = code_df.tail(100)
+
+            empt_ar = []
+
+            for i, row in code_df.iterrows():
+                str_o = str(abs(float(row['시가'])))
+                str_h = str(abs(float(row['고가'])))
+                str_l = str(abs(float(row['저가'])))
+                str_c = str(abs(float(row['현재가'])))
+                str_v = str(abs(float(row['거래량'])))
+                empt_ar.append(str_o + '|' + str_h + '|' + str_l + '|' + str_c + '|' + str_v)
+
+            empy_df.append(pd.DataFrame({code: empt_ar}))
+                
+        df = pd.concat(empy_df, axis=1)
+        print('##################################################')
+        line_message(f'Bot15Swing Total Symbol Data: {len(code_list)}개, \n{code_list} \nFile Download Complete : {FILE_URL_DATA_15M}')
+        print(df)
+        df.to_excel(FILE_URL_DATA_15M)
+
     
     def deadline_to_excel(self):
         sym_lst = self.bkk.filter_code_list()
@@ -476,50 +528,50 @@ class Bot15Swing():
 if __name__ == '__main__':
 
     B15 = Bot15Swing()
-    # B15.market_to_excel(True, True)
+    B15._market_to_excel()
 
-    while True:
+    # while True:
 
-        try:
+    #     try:
 
-            t_n = datetime.datetime.now()
-            t_085000 = t_n.replace(hour=8, minute=50, second=0)
-            t_091500 = t_n.replace(hour=9, minute=15, second=0)
-            t_152500 = t_n.replace(hour=15, minute=25, second=0)
-            t_153000 = t_n.replace(hour=15, minute=30, second=0)
-            t_160000 = t_n.replace(hour=16, minute=0, second=0)
+    #         t_n = datetime.datetime.now()
+    #         t_085000 = t_n.replace(hour=8, minute=50, second=0)
+    #         t_091500 = t_n.replace(hour=9, minute=15, second=0)
+    #         t_152500 = t_n.replace(hour=15, minute=25, second=0)
+    #         t_153000 = t_n.replace(hour=15, minute=30, second=0)
+    #         t_160000 = t_n.replace(hour=16, minute=0, second=0)
 
-            if t_n >= t_085000 and t_n <= t_153000 and B15.bool_marketday == False:
-                if os.path.isfile(os.getcwd() + '/token.dat'):
-                    os.remove('token.dat')
-                B15.init_per_day()
-                B15.bool_marketday = True
-                B15.bool_marketday_end = False
+    #         if t_n >= t_085000 and t_n <= t_153000 and B15.bool_marketday == False:
+    #             if os.path.isfile(os.getcwd() + '/token.dat'):
+    #                 os.remove('token.dat')
+    #             B15.init_per_day()
+    #             B15.bool_marketday = True
+    #             B15.bool_marketday_end = False
 
-                line_message(f'Bot15Swing Stock Start' if B15.init_marketday == 'Y' else 'Bot15Swing Holiday Start')
+    #             line_message(f'Bot15Swing Stock Start' if B15.init_marketday == 'Y' else 'Bot15Swing Holiday Start')
 
-            if B15.init_marketday == 'Y':
+    #         if B15.init_marketday == 'Y':
 
-                if t_n > t_152500 and t_n < t_153000 and B15.bool_stockorder_timer == False:
-                    B15.bool_stockorder_timer = True
+    #             if t_n > t_152500 and t_n < t_153000 and B15.bool_stockorder_timer == False:
+    #                 B15.bool_stockorder_timer = True
 
-                if t_n >= t_091500 and t_n <= t_153000 and B15.bool_stockorder == False:
-                    B15.stock_order()
-                    B15.bool_stockorder = True
+    #             if t_n >= t_091500 and t_n <= t_153000 and B15.bool_stockorder == False:
+    #                 B15.stock_order()
+    #                 B15.bool_stockorder = True
 
-            if t_n == t_160000 and B15.bool_marketday_end == False:
+    #         if t_n == t_160000 and B15.bool_marketday_end == False:
 
-                if B15.init_marketday == 'Y':
-                    B15.market_to_excel(True, True)
-                    B15.bool_stockorder_timer = False
-                    B15.bool_stockorder = False
+    #             if B15.init_marketday == 'Y':
+    #                 B15.market_to_excel(True, True)
+    #                 B15.bool_stockorder_timer = False
+    #                 B15.bool_stockorder = False
 
-                B15.bool_marketday = False
-                B15.bool_marketday_end = True
+    #             B15.bool_marketday = False
+    #             B15.bool_marketday_end = True
 
-                line_message(f'Bot15Swing Stock End' if B15.init_marketday == 'Y' else 'Bot15Swing Holiday End')
+    #             line_message(f'Bot15Swing Stock End' if B15.init_marketday == 'Y' else 'Bot15Swing Holiday End')
 
-        except Exception as e:
+    #     except Exception as e:
 
-            line_message(f"Bot15Swing Error : {e}")
-            break
+    #         line_message(f"Bot15Swing Error : {e}")
+    #         break

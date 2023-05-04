@@ -438,6 +438,14 @@ class Bot15Swing():
     #         if tn_pos_c and _tn_div == 14:
     #             self.bool_threshold = True
 
+    
+    # def deadline_to_excel(self):
+    #     sym_lst = self.bkk.filter_code_list()
+    #     if len(sym_lst) > 0:
+    #         print('##################################################')
+    #         line_message(f'Bot3Swing Symbol List: {len(sym_lst)}개, \n{sym_lst} \nFile Download Complete : {FILE_URL_SMBL_15M}')
+    #         save_file(FILE_URL_SMBL_15M, sym_lst)
+
 
     def _market_to_excel(self):
 
@@ -467,9 +475,9 @@ class Bot15Swing():
         # f_list_a = ['060540.KQ', '043150.KQ', '168360.KQ', '038870.KQ', '124500.KQ', '001060.KS', '005420.KS', '042700.KS', '033240.KS', '303030.KQ', '263020.KQ', '014580.KS', '307750.KQ', '002620.KS', '105840.KS', '047040.KS', '099430.KQ', '047400.KS', '003310.KQ', '002760.KS', '042110.KQ', '378850.KS', '085370.KQ', '027710.KQ', '207760.KQ', '032620.KQ', '173130.KQ', '014440.KS', '417500.KQ', '008700.KS', '018470.KS', '066130.KQ', '023160.KQ', '039420.KQ', '170030.KQ', '095500.KQ', '053050.KQ', '126600.KQ', '092220.KS', '164060.KQ', '085660.KQ', '077360.KQ', '066670.KQ', '396300.KQ', '220260.KQ', '105630.KS', '024840.KQ', '118990.KQ', '040610.KQ', '001250.KS', '012800.KS', '017900.KS', '017960.KS', '054090.KQ', '083420.KS', '138490.KS', '007660.KS', '009190.KS', '006880.KS', '067080.KQ', '023350.KS', '086980.KQ', '009160.KS', '092300.KQ', '081150.KQ', '244920.KS', '075970.KQ', '287410.KQ', '125210.KQ', '006340.KS', '042370.KQ', '310200.KQ', '015230.KS', '047560.KQ', '257720.KQ', '002720.KS', '008350.KS', '058820.KQ', '002700.KS', '005010.KS', '248070.KS', '033100.KQ', '035810.KQ', '119850.KQ', '000430.KS', '000910.KS', '005390.KS', '267260.KS', '103590.KS', '012510.KS', '136480.KQ', '004710.KS', '049720.KQ', '053700.KQ', '002140.KS', '078150.KQ', '019550.KQ', '352480.KQ', '010040.KS', '090350.KS', '382480.KQ', '001430.KS', '131030.KQ', '010100.KS', '001780.KS', '045390.KQ', '009450.KS', '053980.KQ', '037270.KS', '053270.KQ', '036890.KQ', '119500.KQ', '267270.KS', '006060.KS', '021050.KS', '001790.KS', '013310.KQ', '317400.KS', '005160.KQ', '025320.KQ', '050760.KQ', '001390.KS', '061250.KQ', '032850.KQ', '094820.KQ', '094840.KQ', '182360.KQ', '441270.KQ', '204610.KQ', '040160.KQ', '046390.KQ', '094480.KQ', '037950.KQ', '027970.KS', '353810.KQ', '126880.KQ', '293480.KS', '281740.KQ', '084650.KQ', '005680.KS', '008970.KS', '004310.KS', '011330.KS', '053690.KS', '032960.KQ', '065440.KQ', '120240.KQ', '285490.KQ', '241690.KQ', '017040.KS', '005690.KS', '353200.KS', '041190.KQ', '004560.KS', '027580.KQ', '036120.KQ', '102370.KQ', '137950.KQ', '335890.KQ', '071200.KQ', '003070.KS', '205470.KQ', '010470.KQ', '008040.KS', '011150.KS', '060560.KQ', '000480.KS', '064800.KQ']
 
         tn_d = datetime.datetime.today()
-        tn_7 = tn_d + relativedelta(days=-8)
+        tn_8 = tn_d + relativedelta(days=-8)
         str_tn_d = tn_d.strftime('%Y-%m-%d')
-        str_tn_7 = tn_7.strftime('%Y-%m-%d')
+        str_tn_8 = tn_8.strftime('%Y-%m-%d')
 
         df_15m_a = []
         i = 1
@@ -477,7 +485,7 @@ class Bot15Swing():
 
             print(f'yfinance download : {i} / {len(f_list_a)}')
             
-            df_15m = yf.download(tickers=fsl, start=str_tn_7, end=str_tn_d, interval='15m', prepost=True)
+            df_15m = yf.download(tickers=fsl, start=str_tn_8, end=str_tn_d, interval='15m', prepost=True)
             print(fsl, df_15m)
             df_15m_s = []
             for x, row in df_15m.iterrows():
@@ -492,14 +500,6 @@ class Bot15Swing():
         save_xlsx(FILE_URL_DATA_15M, fnal_df)
         line_message(f'Bot15Swing Total Symbol Data: {len(f_list)}개, \n{f_list} \nFile Download Complete : {FILE_URL_DATA_15M}')
         print(fnal_df)
-
-    
-    def deadline_to_excel(self):
-        sym_lst = self.bkk.filter_code_list()
-        if len(sym_lst) > 0:
-            print('##################################################')
-            line_message(f'Bot3Swing Symbol List: {len(sym_lst)}개, \n{sym_lst} \nFile Download Complete : {FILE_URL_SMBL_15M}')
-            save_file(FILE_URL_SMBL_15M, sym_lst)
         
     
     def get_balance_code_list(self, obj=False):
@@ -535,8 +535,7 @@ class Bot15Swing():
 if __name__ == '__main__':
 
     B15 = Bot15Swing()
-    # B15._market_to_excel()
-    # print(B15.bkk.df_today_1m_ohlcv('005930', '153000', 15))
+    B15._market_to_excel()
 
     while True:
 

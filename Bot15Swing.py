@@ -490,7 +490,7 @@ class Bot15Swing():
             df_15m_s = []
             for x, row in df_15m.iterrows():
                 df_15m_s.append(str(row['Open']) + '|' + str(row['High']) + '|' + str(row['Low']) + '|' + str(row['Adj Close']) + '|' + str(row['Volume']))
-            df_15m_a.append(pd.DataFrame({fsl.split('.')[0]: df_15m_s}))
+            df_15m_a.append(pd.DataFrame({fsl.split('.')[0]: df_15m_s}).tail(80).reset_index(level=None, drop=True))
 
             i += 1
 

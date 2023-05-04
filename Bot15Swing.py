@@ -543,17 +543,17 @@ if __name__ == '__main__':
         try:
 
             t_n = datetime.datetime.now()
-            t_084000 = t_n.replace(hour=8, minute=40, second=0)
+            t_083000 = t_n.replace(hour=8, minute=30, second=0)
             t_091500 = t_n.replace(hour=9, minute=15, second=0)
             t_152500 = t_n.replace(hour=15, minute=25, second=0)
             t_153000 = t_n.replace(hour=15, minute=30, second=0)
             t_160000 = t_n.replace(hour=16, minute=0, second=0)
 
-            if t_n >= t_084000 and t_n <= t_153000 and B15.bool_marketday == False:
-                if os.path.isfile(os.getcwd() + '/token.dat'):
-                    os.remove('token.dat')
+            if t_n >= t_083000 and t_n <= t_153000 and B15.bool_marketday == False:
                 if B15.bkk.fetch_marketday() == 'Y':
                     B15._market_to_excel()
+                if os.path.isfile(os.getcwd() + '/token.dat'):
+                    os.remove('token.dat')
                 B15.init_per_day()
                 B15.bool_marketday = True
                 B15.bool_marketday_end = False

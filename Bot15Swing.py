@@ -555,8 +555,6 @@ if __name__ == '__main__':
                 if os.path.isfile(os.getcwd() + '/token.dat'):
                     os.remove('token.dat')
                 B15.init_per_day()
-                if B15.init_marketday == 'Y':
-                    B15.market_to_excel()
                 B15.bool_marketday = True
                 B15.bool_marketday_end = False
 

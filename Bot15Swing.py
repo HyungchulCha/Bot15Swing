@@ -193,7 +193,7 @@ class Bot15Swing():
                     now_d = datetime.datetime.now().strftime('%Y%m%d')
                     dif_d = datetime.datetime(int(now_d[:4]), int(now_d[4:6]), int(now_d[6:])) - datetime.datetime(int(obj_d[:4]), int(obj_d[4:6]), int(obj_d[6:]))
 
-                    if (dif_d.days) >= 28 and obj_s == 1:
+                    if (dif_d.days) >= 48 and obj_s == 1:
 
                         bal_fst = bal_lst[code]['a']
                         chk_cls = chk_cls
